@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浮动</title>
+    <script src="http://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+          * {
+            margin: 0;
+            padding: 0;
+        }
+        .notebook {
+            width: 200px;
+            height: 500px;
+            float: left;
+            background-color: aqua;
+        }
+        .markDown {
+            width: 300px;
+            height: 500px;
+            background-color: blanchedalmond;
+            float: right;
+            margin:0 0 0 300px;
+            padding: auto;
+        }
+         .input { 
+            min-width:100px;
+            margin: 0 300px 0 200px;
+            height: 500px;
+            background-color: bisque;
+        } 
+    </style>
+</head>
+
+<body>
+    <div id="noteBook">
+        <div class="notebook">notebook</div>
+        <div class="markDown">markDown</div>
+        <div class="input">input</div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#noteBook"
+        })
+    </script>
+</body>
+
+</html>
