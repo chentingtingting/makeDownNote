@@ -16,14 +16,19 @@
         <div class="notebook">
             <div>
                 <button v-bind:title="addButtonTitle" v-on:click="addNote">Add Note</button>
-                <div v-for="note of notes">{{note.title}}</div>
+                <div @click="selectNote(note)" class="note" 
+                :class="{selected:note===selectedNote}"
+                 v-for="note of notes">{{note.title}}</div>
             </div>
         </div>
         <div class="input">
-            <textarea class="inputText" v-model="content">
+            <div>
+                <input type="text" placeholder="Note Name" v-model="selectedNote.title">
+            </div>
+            <textarea class="inputText" v-model="selectedNote.content" v-if="selectedNote">
             </textarea>
         </div>
-        <div class="markdown" v-html="previewMarked">
+        <div class="markdown" v-html="previewMarked" v-if="selectedNote">
         </div>
     </div>
 
@@ -32,35 +37,40 @@
 
         var vm = new Vue({
 
-            created() {
-                this.content = localStorage.getItem('content') || 'You can write in **markdown**'
-            },
+            //created() {
+              //  this.content = localStorage.getItem('content') || 'You can write in **markdown**'
+            //},
 
             el: "#notebook",
 
             data: {
                 content: "",
-                notes: [],
-                items: [
-                    { title: 'item 1' },
-                    { title: 'item 2' },
-                    { title: 'item 3' },
-                ]
+                notes: JSON.parse(localStorage.getItem('notes')) || [],
+                selectedId:localStorage.getItem('selected-id') || null,
             },
 
             computed: {
                 previewMarked() {
-                    return marked(this.content)
+                    return this.selectedNote ? marked(this.selectedNote.content) :''
                 },
 
                 addButtonTitle() {
                     return this.notes.length + '  notebook'
                 },
+                selectedNote(){
+                    return this.notes.find(note=>note.id===this.selectedId)
+                }
             },
 
             watch: {
-                content: {
-                    handler: 'saveNote',
+                //content: {
+                 //   handler: 'saveNote',
+                 notes:{
+                      handler:'saveNote',
+                      deep:true
+                },
+                selectedId(val){
+                    localStorage.setItem('selected-id',val)
                 }
             },
 
@@ -79,12 +89,17 @@
 
                 saveNote() {
                     console.log('saving note:', this.content)
-                    localStorage.setItem('content', this.content)
+                    localStorage.setItem('notes',JSON.stringify(this.notes))
+                    //localStorage.setItem('content', this.content)
+                },
+                selectNote(note){
+                    this.selectedId=note.id,
+                    console.log(this.selectedId)
                 }
             }
         })
 
-        console.log('restored noted:', localStorage.getItem('content'))
+       // console.log('restored noted:', localStorage.getItem('content'))
 
     </script>
 
